@@ -1,5 +1,5 @@
 import graphene
-from sqlalchemy import create_engine
+from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from fastapi import FastAPI
 from starlette.graphql import GraphQLApp
@@ -8,17 +8,38 @@ from models import *
 class User(SQLAlchemyObjectType):
     class Meta:
         model = UserModel
-        # only return specified fields
-        only_fields = ("name",)
-        # exclude specified fields
-        exclude_fields = ("last_name",)
+        interfaces = (relay.Node, )
+
+class UserConnection(relay.Connection):
+    class Meta:
+        node = User
+
+class WhiteCard(SQLAlchemyObjectType):
+    class Meta:
+        model = WhiteCardModel
+        interfaces = (relay.Node, )
+
+class WhiteCardConnection(relay.Connection):
+    class Meta:
+        node = WhiteCard
+
+class BlackCard(SQLAlchemyObjectType):
+    class Meta:
+        model = BlackCardModel
+        interfaces = (relay.Node, )
+
+class BlackCardConnection(relay.Connection):
+    class Meta:
+        node = BlackCard
 
 class Query(graphene.ObjectType):
-    users = graphene.List(User)
+    node = relay.Node.Field()
+    # Allows sorting over multiple columns, by default over the primary key
+    all_users = SQLAlchemyConnectionField(UsersConnection)
+    # Disable sorting over this field
+    all_blackcards = SQLAlchemyConnectionField(BlackCardConnection)
+    all_whitecards = SQLAlchemyConnectionField(WhiteCardConnection)
 
-    def resolve_users(self, info):
-        query = User.get_query(info)  # SQLAlchemy query
-        return query.all()
 
 app = FastAPI()
 app.add_route("/", GraphQLApp(schema=graphene.Schema(query=Query)))
