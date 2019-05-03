@@ -1,4 +1,5 @@
 import graphene
+from sqlalchemy import create_engine
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from fastapi import FastAPI
 from starlette.graphql import GraphQLApp
