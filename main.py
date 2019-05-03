@@ -1,4 +1,5 @@
 import graphene
+from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from fastapi import FastAPI
 from starlette.graphql import GraphQLApp
@@ -7,21 +8,37 @@ from models import *
 class User(SQLAlchemyObjectType):
     class Meta:
         model = UserModel
+        interfaces = (relay.Node, )
+
+class UserConnection(relay.Connection):
+    class Meta:
+        node = User
 
 class WhiteCard(SQLAlchemyObjectType):
     class Meta:
         model = WhiteCardModel
+        interfaces = (relay.Node, )
+
+class WhiteCardConnection(relay.Connection):
+    class Meta:
+        node = WhiteCard
 
 class BlackCard(SQLAlchemyObjectType):
     class Meta:
         model = BlackCardModel
+        interfaces = (relay.Node, )
+
+class BlackCardConnection(relay.Connection):
+    class Meta:
+        node = BlackCard
 
 class Query(graphene.ObjectType):
-    users = graphene.List(User)
-
-    def resolve_users(self, info):
-        query = User.get_query(info)  # SQLAlchemy query
-        return query.all()
+    node = relay.Node.Field()
+    # Allows sorting over multiple columns, by default over the primary key
+    all_users = SQLAlchemyConnectionField(UsersConnection)
+    # Disable sorting over this field
+    all_blackcards = SQLAlchemyConnectionField(BlackCardConnection)
+    all_whitecards = SQLAlchemyConnectionField(WhiteCardConnection)
 
 
 app = FastAPI()
