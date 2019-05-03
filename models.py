@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, create_engine
 
 from sqlalchemy.ext.declarative import declarative_base
+
+engine = create_engine('postgresql+psycopg2://matthewdellitalia:fla1996md@localhost/cah', echo=True)
+connection = engine.connect()
 
 Base = declarative_base()
 
