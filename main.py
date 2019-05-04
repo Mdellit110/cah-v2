@@ -34,9 +34,7 @@ class BlackCardConnection(relay.Connection):
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    # Allows sorting over multiple columns, by default over the primary key
     all_users = SQLAlchemyConnectionField(UserConnection)
-    # Disable sorting over this field
     all_blackcards = SQLAlchemyConnectionField(BlackCardConnection)
     all_whitecards = SQLAlchemyConnectionField(WhiteCardConnection)
 
