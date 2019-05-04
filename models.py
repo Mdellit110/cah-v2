@@ -31,3 +31,7 @@ class BlackCardModel(Base):
     deck = Column(String)
     text = Column(String)
     icon = Column(String)
+
+UserModel.__table__.create(bind=engine, checkfirst=True)
+WhiteCardModel.__table__.create(bind=engine, checkfirst=True)
+BlackCardModel.__table__.create(bind=engine, checkfirst=True)
