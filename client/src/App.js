@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { getWhiteCards, getBlackCards } from "./services/graphQl";
+import { getCards } from "./services/graphQl";
+import Deck from "./components/Deck";
 
 function App() {
   const [whiteCards, setWhiteCards] = useState([]);
   const [blackCards, setBlackCards] = useState([]);
 
-  async function getCards() {
-    const whiteCards = await getWhiteCards();
-    const blackCards = await getBlackCards();
-    setWhiteCards(whiteCards);
-    setBlackCards(blackCards);
+  async function getDecks() {
+    const cards = await getCards();
+    setWhiteCards(cards.filter(card => card.__typename === "WhiteCard"));
+    setBlackCards(cards.filter(card => card.__typename === "BlackCard"));
   }
 
   useEffect(() => {
-    getCards();
+    getDecks();
+
   }, []);
 
   return (
     <div className="App">
-      <div
-        whiteCards={whiteCards}
-        blackCards={blackCards}
-      />
+      <Deck color="black" cards={blackCards} />
+      <Deck color="white" cards={whiteCards} />
     </div>
   );
 }

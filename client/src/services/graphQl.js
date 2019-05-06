@@ -1,30 +1,30 @@
 import axios from "axios";
 
-const getWhiteCards = async () => {
+// TODO: set the Search field to a param
+
+const getCards = async () => {
   const resp = await axios({
     url: "http://127.0.0.1:8000",
     method: "post",
     data: {
-      query: `{ allWhitecards { edges { node { id deck text } } } }`
+      query: `{
+        search(deck: "90s") {
+          __typename
+          ... on WhiteCard{
+            text,
+            deck
+          }
+          ... on BlackCard{
+            text,
+            deck,
+            pick
+          }
+        }
+      }`
     }
   });
-
-  return resp.data.data.allWhitecards;
+  console.table(resp.data.data.search);
+  return resp.data.data.search;
 };
 
-const getBlackCards = async () => {
-  const resp = await axios({
-    url: "http://127.0.0.1:8000",
-    method: "post",
-    data: {
-      query: `{ allBlackcards { edges { node { id deck text } } } }`
-    }
-  });
-
-  return resp.data.data.allBlackcards;
-};
-
-export {
-  getWhiteCards,
-  getBlackCards
- };
+export { getCards };
