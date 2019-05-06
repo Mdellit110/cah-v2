@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { getCards } from "./services/graphQl";
 import Deck from "./components/Deck";
+
 function App() {
   const [whiteCards, setWhiteCards] = useState([]);
   const [blackCards, setBlackCards] = useState([]);
@@ -14,6 +15,7 @@ function App() {
 
   useEffect(() => {
     getDecks();
+
   }, []);
 
   return (
