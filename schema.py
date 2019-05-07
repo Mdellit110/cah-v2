@@ -12,13 +12,10 @@ class SearchResult(Union):
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     search = List(SearchResult, deck=graphene.String(), text=graphene.String())
-    all_blackcards = SQLAlchemyConnectionField(BlackCardConnection)
-    all_whitecards = SQLAlchemyConnectionField(WhiteCardConnection)
 
     def resolve_search(self, info, **args):
         whitecard_query = WhiteCard.get_query(info)
         blackcard_query = BlackCard.get_query(info)
-
         if "deck" in args.keys():
             q = args.get("deck")
             whiteCards = whitecard_query.filter((WhiteCardModel.deck.contains(q))).all()

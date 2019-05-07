@@ -10,13 +10,6 @@ db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind
 Base = declarative_base()
 Base.query = db_session.query_property()
 
-
-class UserModel(Base):
-    __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    last_name = Column(String)
-
 class WhiteCardModel(Base):
     __tablename__ = 'white_cards'
     id = Column(Integer, primary_key=True)
@@ -32,6 +25,5 @@ class BlackCardModel(Base):
     text = Column(String)
     icon = Column(String)
 
-UserModel.__table__.create(bind=engine, checkfirst=True)
 WhiteCardModel.__table__.create(bind=engine, checkfirst=True)
 BlackCardModel.__table__.create(bind=engine, checkfirst=True)
