@@ -8,7 +8,7 @@ const getCards = async () => {
     method: "post",
     data: {
       query: `{
-        search(deck: "90s") {
+        search(text: "90s") {
           __typename
           ... on WhiteCard{
             text,
