@@ -9,13 +9,13 @@ function App() {
 
   async function getDecks() {
     const cards = await getCards();
-    setWhiteCards(cards.filter(card => card.__typename === "WhiteCard"));
-    setBlackCards(cards.filter(card => card.__typename === "BlackCard"));
+    console.table(cards);
+    setWhiteCards(cards.first.filter(card => card.__typename === "WhiteCard"));
+    setBlackCards(cards.first.filter(card => card.__typename === "BlackCard"));
   }
 
   useEffect(() => {
     getDecks();
-
   }, []);
 
   return (
