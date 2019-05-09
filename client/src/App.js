@@ -8,10 +8,10 @@ function App() {
   const [blackCards, setBlackCards] = useState([]);
 
   async function getDecks() {
-    const cards = await getCards();
-    console.table(cards);
-    setWhiteCards(cards.first.filter(card => card.__typename === "WhiteCard"));
-    setBlackCards(cards.first.filter(card => card.__typename === "BlackCard"));
+    const cards = await getCards(`["90s", "CAHe3"]`);
+    console.log(cards);
+    setWhiteCards(cards.whiteDecks);
+    setBlackCards(cards.blackDecks);
   }
 
   useEffect(() => {

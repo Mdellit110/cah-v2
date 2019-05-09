@@ -2,35 +2,20 @@ import axios from "axios";
 
 // TODO: set the Search field to a param
 
-const getCards = async args => {
+const getCards = async decks => {
   const resp = await axios({
     url: "http://127.0.0.1:8000",
     method: "post",
     data: {
       query: `{
-        first: decks(deck: "90s") {
-          __typename
-          ... on WhiteCard{
-            text,
-            deck
-          }
-          ... on BlackCard{
-            text,
-            deck,
-            pick
-          }
+        whiteDecks(deck: ${decks}) {
+          deck
+          text
         }
-        second: decks(deck: "apples") {
-          __typename
-          ... on WhiteCard{
-            text,
-            deck
-          }
-          ... on BlackCard{
-            text,
-            deck,
-            pick
-          }
+        blackDecks(deck: ${decks}) {
+          deck
+          text
+          pick
         }
       }`
     }
