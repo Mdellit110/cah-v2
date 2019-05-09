@@ -6,16 +6,16 @@ import Deck from "./components/Deck";
 function App() {
   const [whiteCards, setWhiteCards] = useState([]);
   const [blackCards, setBlackCards] = useState([]);
-
+  const [mattState, setMatt] = useState("");
   async function getDecks() {
-    const cards = await getCards();
-    setWhiteCards(cards.filter(card => card.__typename === "WhiteCard"));
-    setBlackCards(cards.filter(card => card.__typename === "BlackCard"));
+    const cards = await getCards(`["90s", "CAHe3"]`);
+    console.log(cards);
+    setWhiteCards(cards.whiteDecks);
+    setBlackCards(cards.blackDecks);
   }
 
   useEffect(() => {
     getDecks();
-
   }, []);
 
   return (

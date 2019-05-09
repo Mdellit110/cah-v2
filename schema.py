@@ -11,20 +11,38 @@ class SearchResult(Union):
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    search = List(SearchResult, deck=graphene.String(), text=graphene.String())
+    white_decks = List(WhiteCard, deck=graphene.List(graphene.String), text=graphene.String())
+    black_decks = List(BlackCard, deck=graphene.List(graphene.String), text=graphene.String())
 
-    def resolve_search(self, info, **args):
+    def resolve_white_decks(self, info, **args):
         whitecard_query = WhiteCard.get_query(info)
-        blackcard_query = BlackCard.get_query(info)
+        q = args.get("deck")
+        whiteCards = []
         if "deck" in args.keys():
-            q = args.get("deck")
-            whiteCards = whitecard_query.filter((WhiteCardModel.deck.contains(q))).all()
-            blackCards = blackcard_query.filter((BlackCardModel.deck.contains(q))).all()
-        elif "text" in args.keys():
+            for arg in q:
+                whiteCards.extend(whitecard_query.filter((WhiteCardModel.deck.contains(arg))))
+
+        if "text" in args.keys():
             q = args.get("text")
-            whiteCards = whitecard_query.filter((WhiteCardModel.text.contains(q))).all()
-            blackCards = blackcard_query.filter((BlackCardModel.text.contains(q))).all()
+            whiteCards.extend(whitecard_query.filter((WhiteCardModel.text.contains(q))).all())
 
-        return whiteCards + blackCards
+        return whiteCards
 
-schema=graphene.Schema(query=Query, types=[WhiteCard, BlackCard, SearchResult])
+    def resolve_black_decks(self, info, **args):
+        blackcard_query = BlackCard.get_query(info)
+        q = args.get("deck")
+        blackCards = []
+        if "deck" in args.keys():
+            for arg in q:
+                blackCards.extend(blackcard_query.filter((BlackCardModel.deck.contains(arg))))
+
+        if "text" in args.keys():
+            q = args.get("text")
+            blackCards.extend(blackcard_query.filter((BlackCardModel.text.contains(q))).all())
+
+
+        return blackCards
+
+
+
+schema=graphene.Schema(query=Query, types=[WhiteCard, BlackCard])
